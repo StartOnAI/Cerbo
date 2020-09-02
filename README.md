@@ -74,4 +74,4 @@ To train a quick DT Classifier.
 * Aurko Routh
 * Keshav Shah
 * Navein Suresh
-
+* Ayush Karupakula
