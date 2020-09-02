@@ -7,11 +7,11 @@ setuptools.setup(
     name="cerbo", # Replace with your own username
     version="0.0.1",
     author="StartOnAI",
-    author_email="startonaiprogram@gmail.com",
-    description="Efficient ML/DL Modelling",
+    author_email="startonaicom@gmail.com",
+    description="Perform Efficient ML/DL Modelling",
     long_description=long_description,
     long_description_content_type="text/markdown",
-    url="https://github.com/pypa/sampleproject",
+    url="https://github.com/StartOnAI/Cerbo",
     packages=setuptools.find_packages(),
     classifiers=[
         "Programming Language :: Python :: 3",
