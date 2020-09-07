@@ -75,3 +75,4 @@ To train a quick DT Classifier.
 * Keshav Shah
 * Navein Suresh
 * Ayush Karupakula
+* Ishan Jain
