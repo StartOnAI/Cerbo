@@ -76,3 +76,4 @@ To train a quick DT Classifier.
 * Navein Suresh
 * Ayush Karupakula
 * Ishan Jain
+* Shrey Gupta
