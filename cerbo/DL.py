@@ -271,6 +271,7 @@ class CNN:
             self.STEPS_PER_EPOCH = train_data.n // train_data.batch_size
             self.VALIDATION_STEPS = test_data.n // test_data.batch_size
             self.from_generator = True
+            self.input_shape = train_data.image_shape
 
         else:
             self.train_data = train_data
@@ -279,11 +280,12 @@ class CNN:
             self.test_labels = test_labels
             self.num_class = num_class
             self.from_generator = False
+            self.input_shape = train_data.shape[1:]
 
         self.type = type
 
         if type == "resnet":
-            base_model = tensorflow.keras.applications.resnet50.ResNet50(input_shape=train_data.shape[1:], weights="imagenet",
+            base_model = tensorflow.keras.applications.resnet50.ResNet50(input_shape=self.input_shape, weights="imagenet",
                                                               include_top=False)
             x = tensorflow.keras.layers.GlobalAveragePooling2D()(base_model.output)
             output = None
@@ -294,7 +296,7 @@ class CNN:
             self.model = tensorflow.keras.models.Model(inputs=base_model.input, outputs=output)
         elif type == "vgg":
 
-            base_model = tensorflow.keras.applications.VGG19(input_shape=train_data.shape[1:], weights="imagenet",
+            base_model = tensorflow.keras.applications.VGG19(input_shape=self.input_shape, weights="imagenet",
                                                   include_top=False)
 
             for layer in base_model.layers:
