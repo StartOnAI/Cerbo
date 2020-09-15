@@ -284,10 +284,55 @@ class CNN:
 
         self.type = type
 
-        if type == "resnet":
+        if type == "resnet50":
             base_model = tensorflow.keras.applications.resnet50.ResNet50(input_shape=self.input_shape, weights="imagenet",
                                                               include_top=False)
             x = tensorflow.keras.layers.GlobalAveragePooling2D()(base_model.output)
+            output = None
+            if num_class > 2:
+                output = Dense(num_class, activation='softmax')(x)
+            else:
+                output = Dense(1, activation='sigmoid')(x)
+            self.model = tensorflow.keras.models.Model(inputs=base_model.input, outputs=output)
+        
+        elif type == "resnet101":
+            base_model = tensorflow.keras.applications.ResNet101(input_shape=self.input_shape, weights="imagenet",
+                                                              include_top=False)
+            x = tensorflow.keras.layers.Flatten()(base_model.output)
+            output = None
+            if num_class > 2:
+                output = Dense(num_class, activation='softmax')(x)
+            else:
+                output = Dense(1, activation='sigmoid')(x)
+            self.model = tensorflow.keras.models.Model(inputs=base_model.input, outputs=output)
+        
+
+        elif type == "inception_resnet":
+            base_model = tensorflow.keras.applications.InceptionResNetV2(input_shape=self.input_shape, weights="imagenet",
+                                                              include_top=False)
+            x = tensorflow.keras.layers.Flatten()(base_model.output)
+            output = None
+            if num_class > 2:
+                output = Dense(num_class, activation='softmax')(x)
+            else:
+                output = Dense(1, activation='sigmoid')(x)
+            self.model = tensorflow.keras.models.Model(inputs=base_model.input, outputs=output)
+        
+        elif type == "inception":
+            base_model = tensorflow.keras.applications.InceptionV3(input_shape=self.input_shape, weights="imagenet",
+                                                              include_top=False)
+            x = tensorflow.keras.layers.Flatten()(base_model.output)
+            output = None
+            if num_class > 2:
+                output = Dense(num_class, activation='softmax')(x)
+            else:
+                output = Dense(1, activation='sigmoid')(x)
+            self.model = tensorflow.keras.models.Model(inputs=base_model.input, outputs=output)
+
+        elif type == "densenet121":
+            base_model = tensorflow.keras.applications.DenseNet121(input_shape=self.input_shape, weights="imagenet",
+                                                              include_top=False)
+            x = tensorflow.keras.layers.Flatten()(base_model.output)
             output = None
             if num_class > 2:
                 output = Dense(num_class, activation='softmax')(x)
