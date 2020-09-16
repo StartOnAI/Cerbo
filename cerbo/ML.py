@@ -35,10 +35,10 @@ def DecisionTree(task, data, split=0.3, criterion="gini", max_depths=None, class
 
     model.fit(X_train, y_train)
     train_preds = model.score(X_train, y_train)
-    print("Decision Tree Training Accuracy: " + str(train_preds) + "%")
+    print("Decision Tree Training Accuracy: " + str(train_preds * 100) + "%")
     preds = model.predict(X_test)
-    print("Decision Tree Testing Accuracy:  " + str(preds) + "%")
-    return model, preds
+    print("Decision Tree Testing Accuracy:  " + str(model.score(X_test, y_test) * 100) + "%")
+    return model
 
 
 # ----------------------------------------------------------------- KNN
@@ -63,9 +63,8 @@ def KNN(task, data, neighbors=5, weights="uniform", split=0.3, seed=42):  # data
 
     train_preds = knn.score(X_train, y_train)
     print("KNN Training Accuracy: " + str(train_preds * 100) + "%")
-    preds = knn.score(X_test, y_test)
-    print("KNN Testing Accuracy: " + str(preds * 100) + "%")
-    return knn, preds
+    print("KNN Testing Accuracy: " + str((knn.score(X_test, y_test)) * 100) + "%")
+    return knn
 
 
 # ----------------------------------------------------------------- Random Forests
@@ -91,7 +90,7 @@ def RandomForest(task, data, split=0.3, N_Estimators=100, criterion="gini", Max_
     print("Random Forest Training Accuracy: " + str(train_preds * 100) + "%")
     preds = rf.score(X_test, y_test)
     print("Random Forest Testing Accuracy: " + str(preds * 100) + "%")
-    return rf, preds
+    return rf
 
 
 # ----------------------------------------------------------------- Boosting
@@ -129,7 +128,7 @@ def Boosting(task, data, split=0.3, algo="xgb", N_estimators=75, LR=0.5, Max_Dep
     print("Boosting Training Accuracy: " + str(train_preds * 100) + "%")
     preds = boost.score(X_test, y_test)
     print("Boosting Testing Accuracy: " + str(preds * 100) + "%")
-    return boost, preds
+    return boost
 
 
 # -------------------------------------------------------------------------- SGD
@@ -153,7 +152,7 @@ def SGD(task, data, split=0.3, lr="optimal", alpha=0.0001, seed=42):
     print("Boosting Training Accuracy: " + str(train_preds * 100) + "%")
     preds = sgd.score(X_test, y_test)
     print("Boosting Testing Accuracy: " + str(preds * 100) + "%")
-    return sgd, preds
+    return sgd
 
 
 # -------------------------------------------------------------------------- SVMs
@@ -179,7 +178,7 @@ def SVM(task, data, split=0.3, C=1, kernel='rbf', gamma='scale', class_weight=No
     print("Boosting Training Accuracy: " + str(train_preds * 100) + "%")
     preds = SVM.score(X_test, y_test)
     print("Boosting Testing Accuracy: " + str(preds * 100) + "%")
-    return SVM, preds
+    return SVM
 
 
 # ------------------------------------------------------------------------ Logistic Regression
@@ -197,7 +196,7 @@ def LogisticReg(data, split=0.3, solver="lbfgs", seed=42):
     preds = lr.score(X_test, y_test)
     print("Logistic Regression Testing Accuracy: " + str(preds * 100) + "%")
 
-    return lr, preds
+    return lr
 
 
 # ------------------------------------------------------------------------ Regression Models
@@ -230,7 +229,7 @@ def Regression(data, alpha=1.0, split=0.3, task="linear", seed=42):
     preds = model.score(X_test, y_test)
     print(f"{model_name} Regression Testing Accuracy: " + str(preds * 100) + "%")
 
-    return model, preds
+    return model
 
 # ------------------------------------------------------------------------- Apriori
 def apriori(data, min_support, min_confidence, min_lift, min_length):
