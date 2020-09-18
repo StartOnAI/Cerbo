@@ -116,9 +116,9 @@ def Boosting(task, data, split=0.3, algo="xgb", N_estimators=75, LR=0.5, Max_Dep
 
     elif algo == "ada" or algo == "adaboost" or algo == "ab":
         if task == "reg" or task == "r" or task == "regression":
-            boost = AdaBoostRegressor(n_estimators=N_estimators, learning_rate=LR, max_depth=Max_Depth, random_state=42)
+            boost = AdaBoostRegressor(n_estimators=N_estimators, learning_rate=LR, random_state=42)
         elif task == "classify" or task == "c" or task == "classification":
-            boost = AdaBoostClassifier(n_estimators=N_estimators, learning_rate=LR, max_depth=Max_Depth, random_state=42)
+            boost = AdaBoostClassifier(n_estimators=N_estimators, learning_rate=LR, random_state=42)
     else:
         raise NameError('Algorithm should be AdaBoost, Gradient Boosting or XGBoost')
     X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=split, random_state=seed)
