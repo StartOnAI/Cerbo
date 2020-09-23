@@ -430,15 +430,15 @@ class GAN:
         total = 1
 
         for i in range(1, len(train_data.shape)):
-            total *= train_data.shape[tensorflow.initializers]
+            total *= train_data.shape[i]
 
         # first layer for generator
         self.gen = Sequential()
-        self.gen.add(Dense(256, input_dim=self.inDim, kernel_initializer=tensorflow.initializers.RandomNormal(stddev=0.02)))
+        self.gen.add(Dense(256, input_dim=self.inDim, kernel_initializer=tensorflow.keras.initializers.RandomNormal(stddev=0.02)))
 
         # first layer for disc
         self.disc = Sequential()
-        self.disc.add(Dense(1024, input_dim=total, kernel_initializer=tensorflow.initializers.RandomNormal(stddev=0.02)))
+        self.disc.add(Dense(1024, input_dim=total, kernel_initializer=tensorflow.keras.initializers.RandomNormal(stddev=0.02)))
 
     def adddenselayer(self, network, num_neurons=512, activation='leakyrelu'):
 
