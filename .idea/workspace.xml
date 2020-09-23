@@ -2,9 +2,8 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="75671440-d600-4d0d-85f9-2a5d06a64285" name="Default Changelist" comment="">
-      <change beforePath="$PROJECT_DIR$/.idea/Cerbo.iml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/Cerbo.iml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/cerbo/DL.py" beforeDir="false" afterPath="$PROJECT_DIR$/cerbo/DL.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/setup.py" beforeDir="false" afterPath="$PROJECT_DIR$/setup.py" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -51,7 +50,7 @@
       <workItem from="1600222273139" duration="2643000" />
       <workItem from="1600215470449" duration="4000" />
       <workItem from="1600464196187" duration="18000" />
-      <workItem from="1600898263111" duration="1189000" />
+      <workItem from="1600898263111" duration="2055000" />
     </task>
     <servers />
   </component>

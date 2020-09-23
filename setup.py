@@ -5,7 +5,7 @@ with open("README.md", "r") as fh:
 
 setuptools.setup(
     name="cerbo", # Replace with your own username
-    version="0.1.1",
+    version="0.1.2",
     author="StartOnAI",
     author_email="startonaicom@gmail.com",
     description="Perform Efficient ML/DL Modelling",
