@@ -1,6 +1,5 @@
 from sklearn.tree import DecisionTreeClassifier, DecisionTreeRegressor
 from sklearn.model_selection import train_test_split
-# from IPython.display import Image  
 from sklearn.tree import export_graphviz
 from sklearn.linear_model import LogisticRegression, LinearRegression, Ridge, Lasso, SGDClassifier, SGDRegressor
 from sklearn.neighbors import KNeighborsClassifier, KNeighborsRegressor

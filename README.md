@@ -61,19 +61,3 @@ dt, preds = DecisionTree("c", data, seed=42)
 ```
 
 To train a quick DT Classifier. 
-
-
-## Authors
-* Karthik Bhargav 
-* Siddharth Sharma
-* Sauman Das
-* Andy Phung
-* Felix Liu
-* Anaiy Somalwar
-* Nathan Z.
-* Aurko Routh
-* Keshav Shah
-* Navein Suresh
-* Ayush Karupakula
-* Ishan Jain
-* Shrey Gupta
