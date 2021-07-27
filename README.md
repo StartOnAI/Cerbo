@@ -7,6 +7,7 @@ It is a high-level API wrapping Scikit-Learn, Tensorflow, and TensorFlow-Keras t
 ## Install
 
 There are two simple ways of installing Cerbo.
+
 First, you can try:
 ```
 pip install cerbo
