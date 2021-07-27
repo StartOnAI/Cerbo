@@ -19,7 +19,7 @@ or
 python -m pip install cerbo
 ```
 
-It is important to note that there are several packages that must already be installed to install Cerbo. The full list and versions can be found in requirements.txt, and nearly all can simply be installed through pip. If you are having trouble installing any of the prerequisite packages, a quick Gooogle search and online coding forums such as StackOverFlow should explain how to install them correctly.
+It is important to note that there are several packages that must already be installed to install Cerbo. The full list and versions can be found in requirements.txt, and nearly all can simply be installed through pip. If you are having trouble installing any of the prerequisite packages, a quick Google search and online coding forums such as StackOverFlow should explain how to install them correctly.
 
 ## Writing your first program!
 
