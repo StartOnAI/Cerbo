@@ -2,6 +2,9 @@
 
 ![Logo](images/cerbo_logo_2.png)
 
+[![Downloads](https://static.pepy.tech/personalized-badge/cerbo?period=total&units=none&left_color=black&right_color=orange&left_text=Downloads)](https://pepy.tech/project/cerbo)
+[![Python Versions](https://img.shields.io/pypi/pyversions/cerbo.svg?style=plastic)](https://https://pypi.org/project/cerbo/0.1.2/)
+
 # Cerbo
 
 Cerbo means "brain" in Esperanto. 
