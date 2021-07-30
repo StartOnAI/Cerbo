@@ -49,7 +49,7 @@ def load_dataset(name, num_features=5, random_state=42, flatten=False, show_corr
   Returns:
     (X_train, y_train): training data (numpy arrays)
     (X_test, y_test): testing data (20% of total data)
-    col_names (list): feature names
+    col_names (list): feature names (None if dataset is MNIST or Fashion MNIST)
   '''
     os.environ['TF_CPP_MIN_LOG_LEVEL'] = '2'
     if name == 'mnist':
@@ -59,7 +59,7 @@ def load_dataset(name, num_features=5, random_state=42, flatten=False, show_corr
             X_test = X_test.reshape(-1, 784)
             X_train = X_train / 255.0
             X_test = X_test / 255.0
-        return (X_train, y_train), (X_test, y_test)
+        return (X_train, y_train), (X_test, y_test), None
 
     elif name == 'fashion_mnist' or name == 'fmnist':
         (X_train, y_train), (X_test, y_test) = fashion_mnist.load_data()
@@ -67,7 +67,7 @@ def load_dataset(name, num_features=5, random_state=42, flatten=False, show_corr
         if flatten:
             X_train = X_train.reshape(-1, 784)
             X_test = X_test.reshape(-1, 784)
-        return (X_train, y_train), (X_test, y_test)
+        return (X_train, y_train), (X_test, y_test), None
 
     elif name == 'iris':
         data = datasets.load_iris()
@@ -137,7 +137,7 @@ def load_dataset(name, num_features=5, random_state=42, flatten=False, show_corr
 
 
 def load_custom_data(path, predicted_variable, num_features=5, random_state=42, show_corr_matrix=True,
-                     show_subplots=True, id=False, cat=True, cats=None):
+                     show_subplots=True, id=False):
     '''
   Args:
   path(str): Path to the dataset 
