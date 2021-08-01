@@ -37,20 +37,35 @@ def correlations(df, cols):
 
 
 def load_dataset(name, num_features=5, random_state=42, flatten=False, show_corr_matrix=True, show_subplots=True):
-    '''
-  Args:
-    name (str): name of dataset ('mnist', 'fmnist', 'iris', 'breast_cancer', 'diabetes', 'housing')
-    num_features (int): number of features to view in subplots, if None then num_features includes all features
-    random_state (int): specify random state
-    flatten (bool): returns image with shape (-1, 28, 28) if True, else returns image with shape (-1, 784)
-    show_corr_matrix (bool): whether to show correlation matrix
-    show_subplots (bool): whether to show subplots comparing the num_features
+    """
+    Loading Common Datasets
+    
+    Parameters
+    ----------
+    name : str 
+        Name of dataset ('mnist', 'fmnist', 'iris', 'breast_cancer', 'diabetes', 'housing')
+    num_features : int
+        Number of features to view in subplots, if None then num_features includes all features
+    random_state : int
+        Specify random state
+    flatten : bool
+        Returns image with shape (-1, 28, 28) if True, else returns image with shape (-1, 784)
+    show_corr_matrix : bool
+        Whether to show correlation matrix
+    show_subplots : bool
+        Whether to show subplots comparing the num_features
+    
 
-  Returns:
-    (X_train, y_train): training data (numpy arrays)
-    (X_test, y_test): testing data (20% of total data)
-    col_names (list): feature names (None if dataset is MNIST or Fashion MNIST)
-  '''
+    Returns
+    -------
+    (X_train, y_train)
+        Training data in the form of numpy arrays
+    (X_test, y_test)
+        Testing data (20% of total data)
+    col_names
+        Feature names (None if dataset is MNIST or Fashion MNIST)
+    
+    """ 
     os.environ['TF_CPP_MIN_LOG_LEVEL'] = '2'
     if name == 'mnist':
         (X_train, y_train), (X_test, y_test) = mnist.load_data()
