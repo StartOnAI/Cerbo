@@ -25,6 +25,23 @@ os.environ['TF_CPP_MIN_LOG_LEVEL'] = '2'
 
 
 def plot_subplots(df, cols, num=5):
+    """
+    Helper method for data visualization
+
+    Parameters
+    ----------
+    df : pandas DataFrame
+        Training data with column names
+    cols : list
+        List of column names
+    num : int
+        Number of features to include in subplots
+
+    Returns
+    -------
+    No return values, just plots the matrix
+
+    """
     scatter_matrix(df[cols[: num]], figsize=(12, 8))
     plt.savefig("features.png")
 
