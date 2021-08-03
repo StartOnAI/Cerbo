@@ -464,6 +464,33 @@ def read_images_from_dataframe(df, IMAGE_DIR, file_col='files', class_col='class
 
 def read_images_from_directory(IMAGE_DIR, target_size=(100, 100), class_mode='categorical',
                                batch_size=16, shuffle=True, validation_split=0.2):
+    """
+    Loading Common Datasets
+
+    Parameters
+    ----------
+    IMAGE_DIR : str
+        The path to the directory containing images
+    target_size : tuple
+        Input dimension of network. All images will be reshaped to this size.
+    class_mode : str
+        One of the following options: ["binary", "categorical", "input", "multi_output", "raw", sparse", None]
+    batch_size : int
+        Number of images in each training batch
+    shuffle : bool
+        Whether to shuffle images presented in the DataFrame
+    validation_split : float
+        The fraction of images to include for validation
+
+
+    Returns
+    -------
+    train_generator
+        Generator that returns batches of training data
+    test_generator
+        Generator that returns data for testing/validation
+
+    """
     img_datagen = ImageDataGenerator(rescale=1. / 255,
                                      validation_split=validation_split)
 
