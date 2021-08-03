@@ -42,7 +42,7 @@ bibliography: paper.bib
 
 # Summary
 
-The Cerbo Machine Learning Repository is an open-source library that aims to increase the level of approachability to Artificial Intelligence, a topic that can be intimidating for many students. Wrapping several of the most popular state-of-the-art, research-oriented libraries `[@abadi2016tensorflow]`, Cerbo offers users the ultimate level of abstraction for data preprocessing, data visualization, and machine learning and deep learning model creation in Python. Thus, Cerbo makes coding easier and more beginner-friendly and helps educators drive student engagement and teach students how to apply theory in these in-demand topics. The Cerbo Machine Learning Repository can be easily installed through ``pip``, and multiple in-depth code tutorials can be found on the project’s Github. 
+The Cerbo Machine Learning Repository is an open-source library that aims to increase the level of approachability to Artificial Intelligence, a topic that can be intimidating for many students. Wrapping several of the most popular state-of-the-art, research-oriented libraries [@abadi2016tensorflow, @pedregosa2011scikit], Cerbo offers users the ultimate level of abstraction for data preprocessing, data visualization, and machine learning and deep learning model creation in Python. Thus, Cerbo makes coding easier and more beginner-friendly and helps educators drive student engagement and teach students how to apply theory in these in-demand topics. The Cerbo Machine Learning Repository can be easily installed through ``pip``, and multiple in-depth code tutorials can be found on the project’s Github. 
 
 # Statement of Need
 
