@@ -487,3 +487,22 @@ def data_scaling(data, task="minmax"):
         "y": y
     }
     return scaled_data
+
+def join_arrays(a, b):
+    """
+    Joining Arrays Row-wise
+
+    Parameters
+    ----------
+    a : array
+        One of the arrays
+    b : array
+        Second of the arrays
+    
+    Returns
+    -------
+    arr : array
+        Joined two arrays row wise
+
+    """
+    return (np.r_[a, b])
