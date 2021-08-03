@@ -165,6 +165,10 @@ def load_dataset(name, num_features=5, random_state=42, flatten=False, show_corr
         X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.2, random_state=42)
         if show_corr_matrix:
             plt.title("Correlation Matrix")
+    
+    else:
+        raise NameError("Please provide an appropriate value for 'name'")
+    
     return (X_train, y_train), (X_test, y_test), col_names
 
 
@@ -271,6 +275,8 @@ def visualize_data(X, y, column_index=0, task="scatter", color=None):
     elif task == "compBP":
         sns.barplot(x=X, y=y)
         plt.savefig("BarPlot.png")
+    else:
+        raise NameError("Please provide an appropriate value for 'task'")
 
     if flag:
         fig.show()
@@ -395,8 +401,6 @@ def classification_data(n_clusters=2, n_samples=100):
     return (X_train, y_train), (X_test, y_test)
 
 
-# train, test = classification_data()
-
 def read_images_from_dataframe(df, IMAGE_DIR, file_col='files', class_col='class', class_mode='raw',
                                target_size=(224, 224), batch_size=32, shuffle=True, validation_split=0.2):
     img_datagen = ImageDataGenerator(rescale=1. / 255,
@@ -450,6 +454,22 @@ def read_images_from_directory(IMAGE_DIR, target_size=(100, 100), class_mode='ca
 
 
 def data_scaling(data, task="minmax"):
+    """
+    Scale Data to a similar range
+
+    Parameters
+    ----------
+    data : dict
+        Dictionary containing features and values for the given features
+    task : str
+        Specific type of scaling that needs to be performed[Standard Scaling vs. Minmax Scaling]
+
+    Returns
+    -------
+    scaled_data : dict
+        Dictionary with the data scaled appropriately
+
+    """ 
     X = data["X"]
     y = data["y"]
 
@@ -457,6 +477,8 @@ def data_scaling(data, task="minmax"):
         scaler = MinMaxScaler()
     elif task == "standard" or task == "s":
         scaler = StandardScaler()
+    else:
+        raise NameError("Please provide an appropriate scaling option['s' for StandardScaler or 'mm' for MinMax]")
 
     scaler.fit_transform(X)
 
