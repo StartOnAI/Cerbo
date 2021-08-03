@@ -5,7 +5,7 @@ with open("README.md", "r") as fh:
 
 setuptools.setup(
     name="cerbo", # Replace with your own username
-    version="0.1.2",
+    version="0.3.1",
     author="StartOnAI",
     author_email="startonaicom@gmail.com",
     description="Perform Efficient ML/DL Modelling",
@@ -15,7 +15,7 @@ setuptools.setup(
     packages=setuptools.find_packages(),
     classifiers=[
         "Programming Language :: Python :: 3",
-        "License :: OSI Approved :: MIT License",
+        "License :: OSI Approved :: Creative Commons License",
         "Operating System :: OS Independent",
     ],
     python_requires='>=3.6',

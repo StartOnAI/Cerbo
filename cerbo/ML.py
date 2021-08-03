@@ -1,251 +1,560 @@
-from sklearn.tree import DecisionTreeClassifier, DecisionTreeRegressor
-from sklearn.model_selection import train_test_split
-from sklearn.tree import export_graphviz
-from sklearn.linear_model import LogisticRegression, LinearRegression, Ridge, Lasso, SGDClassifier, SGDRegressor
-from sklearn.neighbors import KNeighborsClassifier, KNeighborsRegressor
-from sklearn.model_selection import train_test_split
-from xgboost import XGBRegressor, XGBClassifier
-from sklearn.ensemble import GradientBoostingClassifier, GradientBoostingRegressor, AdaBoostClassifier, \
-    AdaBoostRegressor, RandomForestClassifier, RandomForestRegressor
-from sklearn import svm
 import pickle
+
+from xgboost import XGBRegressor, XGBClassifier
+
+from sklearn.model_selection import train_test_split
+from sklearn.metrics import mean_squared_error, accuracy_score
+from sklearn.tree import DecisionTreeClassifier, DecisionTreeRegressor
+from sklearn.neighbors import KNeighborsClassifier, KNeighborsRegressor
+from sklearn.ensemble import GradientBoostingClassifier, GradientBoostingRegressor, AdaBoostClassifier, AdaBoostRegressor, RandomForestClassifier, RandomForestRegressor
+from sklearn import svm
+from sklearn.linear_model import LogisticRegression, LinearRegression, Ridge, Lasso, SGDClassifier, SGDRegressor
+
 
 
 # ----------------------------------------------------------------- DT
-def DecisionTree(task, data, split=0.3, criterion="gini", max_depths=None, class_weights=None, min_samples_splits=2, max_features = None, seed=42):
-    # task - string "c " or "r"; data - list of inputs; labels - list of outputs; split - train-test split;
-    # class_weights - dictionary; visualization - boolean
-    task = task.lower()
+def DecisionTree(task, data, split=0.3, max_depths=None, seed=42):
+    """
+    Simplified Decision Tree
+    
+    Parameters
+    ----------
+    task : str 
+        String describing if the task is Classification or Regression
+    data : dict
+        Dictionary containing features and values for given features
+    split : float
+        Train/Test Split for the data inside dict
+    max_depths : int
+        Maximum Depth the Decision Tree can go to
+    seed : int
+        Value that controls shuffling of data
+    
 
+    Returns
+    -------
+    model
+        The actual Decision Tree Model fitted to the training data
+    
+    """ 
+    
+    task = task.lower()
     X = data["X"]
     y = data["y"]
 
-    if task == "classify" or task == "c" or task == "classification":
-        model = DecisionTreeClassifier(max_depth=max_depths, criterion=criterion, class_weight=class_weights, min_samples_split=min_samples_splits, max_features=max_features, random_state=seed)
+    X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=split, random_state=seed)
+    
+    if task == "c" or task == "classify" or task == "classification":
+        model = DecisionTreeClassifier(max_depth=max_depths, random_state=seed)
+        model.fit(X_train, y_train)
+        
+        train_preds = model.score(X_train, y_train)
+        print("Decision Tree Training Accuracy: " + str(train_preds*100) + "%")
+        print("Decision Tree Testing Accuracy:  " + str(model.score(X_test, y_test) * 100) + "%") 
 
-    elif task == "reg" or task == "r" or task == "regression":
-        model = DecisionTreeRegressor(max_depth=max_depths, criterion=criterion, class_weight=class_weights, min_samples_split=min_samples_splits, max_features=max_features, random_state=seed)
+        return model
 
+    elif task == "r" or task == "reg" or task == "regression":
+        model = DecisionTreeRegressor(max_depth=max_depths, random_state=seed)
+        model.fit(X_train, y_train)
+
+        train_preds = model.predict(X_train)
+        train_rmse = mean_squared_error(y_train, train_preds, squared=False)
+        print("Decision Tree Training RMSE: " + str(train_rmse) + "")
+
+        test_preds = model.predict(X_test)
+        test_rmse = mean_squared_error(y_test, test_preds, squared=False)
+        print("Decision Tree Testing RMSE: " + str(test_rmse) + "")
+        
+        return model     
     else:
         raise NameError('Task should be classification or regression')
 
 
-    X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=split, random_state=seed)
-
-    model.fit(X_train, y_train)
-    train_preds = model.score(X_train, y_train)
-    print("Decision Tree Training Accuracy: " + str(train_preds * 100) + "%")
-    preds = model.predict(X_test)
-    print("Decision Tree Testing Accuracy:  " + str(model.score(X_test, y_test) * 100) + "%")
-    return model
-
-
 # ----------------------------------------------------------------- KNN
 
-def KNN(task, data, neighbors=5, weights="uniform", split=0.3, seed=42):  # data should be a dict containing X and y; split is the size of the test set
-    # data preprocessing
-    task = task.lower()
+def KNN(task, data, split=0.3, neighbors=5, weights="uniform", seed=42): 
+    """
+    Simple Implementation of a KNearestNeighbors
 
+    Parameters
+    ----------
+    task : str 
+        String describing if the task is Classification or Regression
+    data : dict
+        Dictionary containing features and values for given features
+    split : float
+        Train/Test Split for the data inside dict
+    neighbors : int
+        Number of Neighbors for the KNN Algorithm
+    weights : str
+        Weight Function used in calculating final KNN Prediction
+    seed : int
+        Value that controls shuffling of data
+
+    Returns
+    -------
+    model
+        The actual KNN Model fitted to the training data
+    
+    """ 
+    
+    task = task.lower()
     X = data["X"]
     y = data["y"]
-
-    if task == "classify" or task == "c" or task == "classification":
-        knn = KNeighborsClassifier(n_neighbors=neighbors, weights=weights)
-    elif task == "reg" or task == "r" or task == "regression":
-        knn = KNeighborsRegressor(n_neighbors=neighbors, weights=weights)
-    else:
-        raise NameError('Task should be Classification or Regression')
 
     X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=split, random_state=seed)
 
-    knn.fit(X_train, y_train)
+    if task == "c" or task == "classify" or task == "classification":
+        model = KNeighborsClassifier(n_neighbors=neighbors, weights=weights)
+        model.fit(X_train, y_train)
+        
+        train_preds = model.score(X_train, y_train)
+        print("KNN Training Accuracy: " + str(train_preds*100) + "%")
+        print("KNN Testing Accuracy: " + str(model.score(X_test, y_test) * 100) + "%")
+    
+        return model
 
-    train_preds = knn.score(X_train, y_train)
-    print("KNN Training Accuracy: " + str(train_preds * 100) + "%")
-    print("KNN Testing Accuracy: " + str((knn.score(X_test, y_test)) * 100) + "%")
-    return knn
+    elif task == "r" or task == "reg" or task == "regression":
+        model = KNeighborsRegressor(n_neighbors=neighbors, weights=weights)
+        model.fit(X_train, y_train)
 
+        train_preds = model.predict(X_train)
+        train_rmse = mean_squared_error(y_train, train_preds, squared=False)
+        print("KNN Training RMSE: " + str(train_rmse))
+
+        test_preds = model.predict(X_test)
+        test_rmse = mean_squared_error(y_test, test_preds, squared=False)
+        print("KNN Testing RMSE: " + str(test_rmse))
+
+    else:
+        raise('Task should be classification or regression')
 
 # ----------------------------------------------------------------- Random Forests
-def RandomForest(task, data, split=0.3, N_Estimators=100, criterion="gini", Max_Depth=None, Max_Features="auto", Min_Samples_Split=2, seed=42):
-    task = task.lower()
+def RandomForest(task, data, split=0.3, n_estimators=100, max_depths=None, seed=42):
+    """
+    Easy to Use Random Forest Algorithm
 
+    Parameters
+    ----------
+    task : str 
+        String describing if the task is Classification or Regression
+    data : dict
+        Dictionary containing features and values for given features
+    split : float
+        Train/Test Split for the data inside dict
+    n_estimators : int
+        Number of Trees within the Forest
+    max_depths : int
+        Maximum Depth each Tree can go to
+    seed : int
+        Value that controls shuffling of data
+
+
+    Returns
+    -------
+    model
+        The Actual Random Forest Model fitted to the training data
+    
+    """
+
+    task = task.lower()
     X = data["X"]
     y = data["y"]
 
-    if task == "reg" or task == "r" or task == "regression":
-        rf = RandomForestRegressor(n_estimators=N_Estimators, criterion=criterion, max_depth=Max_Depth, max_features=Max_Features, min_samples_split=Min_Samples_Split,
-                                   random_state=seed)
-    elif task == "classify" or task == "c" or task == "classification":
-        rf = RandomForestClassifier(n_estimators=N_Estimators, criterion=criterion,  max_depth=Max_Depth, max_features=Max_Features, min_samples_split=Min_Samples_Split,
-                                    random_state=seed)
+    X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=split, random_state=seed)
+    
+    if task == "c" or task == "classify" or task == "classification":
+        model = RandomForestClassifier(n_estimators=n_estimators,max_depth=max_depths, random_state=seed)
+        model.fit(X_train, y_train)
+
+        train_preds = model.score(X_train, y_train)
+        print("RandomForest Training Accuracy: " + str(train_preds*100) + "%")
+        print("RandomForest Testing Accuracy:  " + str(model.score(X_test, y_test) * 100) + "%")
+
+        return model
+
+    elif task == "r" or task == "reg" or task == "regression":
+        model = RandomForestRegressor(n_estimators=n_estimators, max_depth=max_depths, random_state=seed)
+        model.fit(X_train, y_train)
+
+        train_preds = model.predict(X_train)
+        train_rmse = mean_squared_error(y_train, train_preds, squared=False)
+        print("RandomForest Training RMSE: " + str(train_rmse) + "")
+
+        test_preds = model.predict(X_test)
+        test_rmse = mean_squared_error(y_test, test_preds, squared=False)
+        print("RandomForest Testing RMSE: " + str(test_rmse) + "")
+        
+        return model  
+
     else:
         raise NameError('Task should be Regression or Classification')
 
-    X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=split, random_state=seed)
-
-    rf.fit(X_train, y_train)
-    train_preds = rf.score(X_train, y_train)
-    print("Random Forest Training Accuracy: " + str(train_preds * 100) + "%")
-    preds = rf.score(X_test, y_test)
-    print("Random Forest Testing Accuracy: " + str(preds * 100) + "%")
-    return rf
-
-
 # ----------------------------------------------------------------- Boosting
-def Boosting(task, data, split=0.3, algo="xgb", N_estimators=75, LR=0.5, Max_Depth=3, seed=42):
+def Boosting(task, data, split=0.3, algo="xgb", n_estimators=75, lr=0.5, seed=42):
+    """
+    Simplified Boosting Algorithm
+
+    Parameters
+    ----------
+    task : str 
+        String describing if the task is Classification or Regression
+    data : dict
+        Dictionary containing features and values for given features
+    split : float
+        Train/Test Split for the data inside dict
+    algo : str
+        Specific Boosting Algorithm to be used[XGBoost, Gradient Boosting]
+    n_estimators : int
+        Number of Trees within the Forest
+    lr : float
+        The amount the contribution of each tree(n_estimators) is decreased by
+    seed : int
+        Value that controls shuffling of data
+
+    Returns
+    -------
+    model
+        The Actual Boosting Model fitted to the training data
+
+    """ 
+    
     algo = algo.lower()
     task = task.lower()
-
     X = data["X"]
     y = data["y"]
 
-
-    if algo == "xgb" or task == "xgboost":
-        if task == "reg" or task == "r" or task == "regression":
-            boost = XGBRegressor(n_estimators=N_estimators, learning_rate=LR, max_depth=Max_Depth, random_state=42)
-        elif task == "classify" or task == "c" or task == "classification":
-            boost = XGBClassifier(n_estimators=N_estimators, learning_rate=LR, max_depth=Max_Depth, random_state=42)
-
-    elif algo == "gb" or algo == "gradientboosting" or algo == "gradient":
-        if task == "reg" or task == "r" or task == "regression":
-            boost = GradientBoostingRegressor(n_estimators=N_estimators, learning_rate=LR, max_depth=Max_Depth, random_state=42)
-        elif task == "classify" or task == "c" or task == "classification":
-            boost = GradientBoostingClassifier(n_estimators=N_estimators, learning_rate=LR, max_depth=Max_Depth, random_state=42)
-
-    elif algo == "ada" or algo == "adaboost" or algo == "ab":
-        if task == "reg" or task == "r" or task == "regression":
-            boost = AdaBoostRegressor(n_estimators=N_estimators, learning_rate=LR, random_state=42)
-        elif task == "classify" or task == "c" or task == "classification":
-            boost = AdaBoostClassifier(n_estimators=N_estimators, learning_rate=LR, random_state=42)
-    else:
-        raise NameError('Algorithm should be AdaBoost, Gradient Boosting or XGBoost')
     X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=split, random_state=seed)
 
-    boost.fit(X_train, y_train)
-    train_preds = boost.score(X_train, y_train)
-    print("Boosting Training Accuracy: " + str(train_preds * 100) + "%")
-    preds = boost.score(X_test, y_test)
-    print("Boosting Testing Accuracy: " + str(preds * 100) + "%")
-    return boost
+    if algo == "xgb" or task == "xgboost":
+        if task == "c" or task == "classify" or task == "classification":
+            model = XGBClassifier(n_estimators=n_estimators, learning_rate=lr, random_state=seed)
+            model.fit(X_train, y_train)
+
+            train_preds = model.score(X_train, y_train)
+            print("XGBoost Training Accuracy: " + str(train_preds*100) + "%")
+            print("XGBoost Testing Accuracy: " + str(model.score(X_test, y_test)*100) + "%")
+
+            return model 
+
+        elif task == "r" or task == "reg" or task == "regression":
+            model = XGBRegressor(n_estimators=n_estimators, learning_rate=lr, random_state=seed)
+            model.fit(X_train, y_train)
+            
+            train_preds = model.predict(X_train)
+            train_rmse = mean_squared_error(y_train, train_preds, squared=False)
+            print("XGBoost Training RMSE: " + str(train_rmse))
+
+            test_preds = model.predict(X_test)
+            test_rmse = mean_squared_error(y_test, test_preds, squared=False)
+            print("XGBoost Testing RMSE: " + str(test_rmse))
+
+            return model
+
+        else: 
+            raise NameError('Task should be Regression or Classification')
+   
+    elif algo == "gb" or algo == "gradient" or algo == "gradientboosting":
+        if task == "c" or task == "classify" or task == "classification":
+            model = GradientBoostingClassifier(n_estimators=n_estimators, learning_rate=lr, random_state=seed)
+            model.fit(X_train, y_train)
+
+            train_preds = model.score(X_train, y_train)
+            print("Gradient Boosting Training Accuracy: " + str(train_preds*100) + "%")
+            print("Gradient Boosting Testing Accuracy: " + str(model.score(X_test, y_test)*100) + "%")
+
+            return model 
+
+        elif task == "r" or task == "reg" or task == "regression":
+            model = GradientBoostingRegressor(n_estimators=n_estimators, learning_rate=lr, random_state=seed)
+            model.fit(X_train, y_train)
+            
+            train_preds = model.predict(X_train)
+            train_rmse = mean_squared_error(y_train, train_preds, squared=False)
+            print("Gradient Boosting Training RMSE: " + str(train_rmse))
+
+            test_preds = model.predict(X_test)
+            test_rmse = mean_squared_error(y_test, test_preds, squared=False)
+            print("Gradient Boosting Testing RMSE: " + str(test_rmse))
+
+            return model
+
+        else:
+            raise NameError('Task should be Regression or Classification')
+
+    elif algo == "ada" or algo == "adaboost":
+        if task == "c" or task == "classify" or task == "classification":
+            model = AdaBoostClassifier(n_estimators=n_estimators, learning_rate=lr, random_state=42)
+            model.fit(X_train, y_train)
+
+            train_preds = model.score(X_train, y_train)
+            print("AdaBoost Training Accuracy: " + str(train_preds*100) + "%")
+            print("AdaBoost Testing Accuracy: " + str(model.score(X_test, y_test)*100) + "%")
+
+            return model 
+
+        elif task == "r" or task == "reg" or task == "regression":
+            model = AdaBoostRegressor(n_estimators=n_estimators, learning_rate=lr, random_state=42)
+            model.fit(X_train, y_train)
+            
+            train_preds = model.predict(X_train)
+            train_rmse = mean_squared_error(y_train, train_preds, squared=False)
+            print("AdaBoost Training RMSE: " + str(train_rmse))
+
+            test_preds = model.predict(X_test)
+            test_rmse = mean_squared_error(y_test, test_preds, squared=False)
+            print("AdaBoost Testing RMSE: " + str(test_rmse))
+
+            return model
+
+        else:
+            raise NameError('Task should be Regression or Classification')
+
+    else:
+        raise NameError('Algorithm should be AdaBoost, Gradient Boosting or XGBoost')
+
 
 
 # -------------------------------------------------------------------------- SGD
-def SGD(task, data, split=0.3, lr="optimal", alpha=0.0001, seed=42):
-    task = task.lower()
+def SGD(task, data, split=0.3, alpha=0.0001, seed=42):
+    """
+    Stochastic Gradient Descent 
 
+    Parameters
+    ----------
+    task : str 
+        String describing if the task is Classification or Regression
+    data : dict
+        Dictionary containing features and values for given features
+    split : float
+        Train/Test Split for the data inside dict
+    alpha : float
+        Constant that multiplies the regularization term
+    seed : int
+        Value that controls shuffling of data
+
+    Returns
+    -------
+    model
+        SGD Model Fitted to Training Data
+
+    """ 
+    
+    task = task.lower()
     X = data["X"]
     y = data["y"]
 
-    if task == "r" or task == "reg" or task == "regression":
-        sgd = SGDRegressor(learning_rate=lr, alpha=alpha, random_state=seed)
-    elif task == "c" or task == "classify" or task == "classification":
-        sgd = SGDClassifier(learning_rate=lr, alpha=alpha, random_state=seed)
+    X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=split, random_state=seed)
+    
+    if task == "c" or task == "classify" or task == "classification":
+        model = SGDClassifier(alpha=alpha, random_state=seed)
+        model.fit(X_train, y_train)
+
+        train_preds = model.score(X_train, y_train)
+        print("SGD Training Accuracy: " + str(train_preds*100) + "%")
+        print("SGD Testing Accuracy: " + str(model.score(X_test, y_test) * 100) + "%")
+
+        return model
+
+    elif task == "r" or task == "reg" or task == "regression":
+        model = SGDRegressor(alpha=alpha, random_state=seed)
+        model.fit(X_train, y_train)
+
+        train_preds = model.predict(X_train)
+        train_rmse = mean_squared_error(y_train, train_preds, square=False)
+        print("SGD Training RMSE: " + str(train_rmse))
+
+        test_preds = model.predict(X_test)
+        test_rmse = mean_squared_error(y_test, test_preds, squared=False)
+        print("SGD Testing RMSE: " + str(test_rmse))
+
+        return model
+  
     else:
         raise NameError('Task should be either regression or classification')
 
-    X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=split, random_state=seed)
-
-    sgd.fit(X_train, y_train)
-    train_preds = sgd.score(X_train, y_train)
-    print("Boosting Training Accuracy: " + str(train_preds * 100) + "%")
-    preds = sgd.score(X_test, y_test)
-    print("Boosting Testing Accuracy: " + str(preds * 100) + "%")
-    return sgd
-
-
 # -------------------------------------------------------------------------- SVMs
+def SVM(task, data, split=0.3, C=1, seed=42):
+    """
+    Easy to Use Support Vector Machine
 
-def SVM(task, data, split=0.3, C=1, kernel='rbf', gamma='scale', class_weight=None, verbose=True, seed=42):
+    Parameters
+    ----------
+    task : str 
+        String describing if the task is Classification or Regression
+    data : dict
+        Dictionary containing features and values for given features
+    split : float
+        Train/Test Split for the data inside dict
+    C : float
+        Regularization Parameter
+    seed : int
+        Value that controls shuffling of data
+
+
+    Returns
+    -------
+    model 
+        The Actual SVM Model fitted to the Training Data
+
+    """
+
+
     task = task.lower()
-
     X = data["X"]
     y = data["y"]
 
-
-    if task == "r" or task == "reg" or task == "regression":
-        SVM = svm.SVC(C=C, kernel=kernel, gamma=gamma, class_weight=class_weight, verbose=False)
-    elif task == "c" or task == "classify" or task == "classification":
-        SVM = svm.SVR(C=C, kernel=kernel, gamma=gamma, verbose=False)
-    else:
-        raise NameError('task should be either regression or classification')
-
     X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=split, random_state=seed)
 
-    SVM.fit(X_train, y_train)
-    train_preds = SVM.score(X_train, y_train)
-    print("Boosting Training Accuracy: " + str(train_preds * 100) + "%")
-    preds = SVM.score(X_test, y_test)
-    print("Boosting Testing Accuracy: " + str(preds * 100) + "%")
-    return SVM
+    if task == "c" or task == "classify" or task == "classification":
+        model = svm.SVC(C=C)
+        model.fit(X_train, y_train)
+        
+        train_preds = model.score(X_train, y_train)
+        print("Support Vector Machines Training Accuracy: " + str(train_preds*100) + "%")
+        print("Support Vector Machines Testing Accuracy: " + str(model.score(X_test, y_test)*100) + "%")
+
+        return model
+    elif task == "r" or task == "reg" or task == "regression":
+        model = svm.SVR(C=C)
+        model.fit(X_train, y_train)
+
+        train_preds = model.predict(X_train)
+        train_rmse = mean_squared_error(y_train, train_preds, squared=False)
+        print("Support Vector Machines Training RMSE: " + str(train_rmse))
+
+        test_preds = model.predict(X_test)
+        test_rmse = mean_squared_error(y_test, test_preds, squared=False)
+        print("Support Vector Machines Testing RMSE: " + str(test_rmse))
+
+        return model
+
+    else:
+        raise NameError('task should be either regression or classification')
 
 
 # ------------------------------------------------------------------------ Logistic Regression
 def LogisticReg(data, split=0.3, solver="lbfgs", seed=42):
+    """
+    Logistic Regression Model
+
+    Parameters
+    ----------
+    data : dict
+        Dictionary containing features and values for given features
+    split : float
+        Train/Test Split for the data inside dict
+    solver : str
+        Algorithm used for Optimization problem for Log. Reg
+        Other Solvers:
+            lbfgs
+            newton-cg
+            lib-linear
+            sag
+            saga
+    seed : int
+        Value that controls shuffling of data
+    
+    Returns
+    -------
+    model
+        Logistic Regression Model fitted to the training data
+
+    """
+
     X = data["X"]
     y = data["y"]
 
     X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=split, random_state=seed)
 
-    lr = LogisticRegression(solver=solver, random_state=42)
-
-    lr.fit(X_train, y_train)
-    train_preds = lr.score(X_train, y_train)
+    model = LogisticRegression(solver=solver, random_state=42)
+    model.fit(X_train, y_train)
+    train_preds = model.score(X_train, y_train)
     print("Logistic Regression Training Accuracy: " + str(train_preds * 100) + "%")
-    preds = lr.score(X_test, y_test)
-    print("Logistic Regression Testing Accuracy: " + str(preds * 100) + "%")
-
-    return lr
+    test_preds = model.score(X_test, y_test)
+    print("Logistic Regression Testing Accuracy: " + str(test_preds * 100) + "%")
+    
+    return model 
 
 
 # ------------------------------------------------------------------------ Regression Models
-def Regression(data, alpha=1.0, split=0.3, task="linear", seed=42):
-    task = task.lower()
+def Regression(data, split=0.3, task="linear", seed=42):
+    """
+    Regression Model
 
+    Parameters
+    ----------
+    data : dict
+        Dictionary containing features and values for given features
+    split : float
+        Train/Test Split for the data inside dict
+    task : str
+        Variable so you can choose between different types of Regression
+        Options:
+            Linear
+            Lasso
+            Ridge
+    seed : int
+        Value that controls shuffling of data
+
+    Returns
+    -------
+    model
+        Regression Model fitted to training data
+
+    """ 
+    
+    task = task.lower()
     X = data["X"]
     y = data["y"]
 
-    model_name = ""
+    X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=split, random_state=seed)
 
     if task == "linear" or task == "li":
         model = LinearRegression()
-        model_name = "Linear"
+        model.fit(X_train, y_train)
+
+        train_preds = model.predict(X_train)
+        train_rmse = mean_squared_error(y_train, train_preds, squared=False)
+        print("Linear Regression Training RMSE: " + str(train_rmse))
+
+        test_preds = model.predict(X_test)
+        test_rmse = mean_squared_error(y_test,test_preds,squared=False)
+        print("Linear Regression Testing RMSE: " + str(test_rmse))
+
+        return model
     elif task == "ridge" or task == "r":
-        model = Ridge(alpha=alpha, random_state=seed)
-        model_name = "Ridge"
+        model = Ridge()
+        model.fit(X_train, y_train)
+
+        train_preds = model.predict(X_train)
+        train_rmse = mean_squared_error(y_train, train_preds, squared=False)
+        print("Ridge Regression Training RMSE: " + str(train_rmse))
+
+        test_preds = model.predict(X_test)
+        test_rmse = mean_squared_error(y_test,test_preds,squared=False)
+        print("Ridge Regression Testing RMSE: " + str(test_rmse))
+
+        return model
+
     elif task == "lasso" or task == "la":
-        model = Lasso(alpha=alpha, random_state=seed)
-        model_name = "Lasso"
+        model = Lasso()
+        model.fit(X_train, y_train)
+
+        train_preds = model.predict(X_train)
+        train_rmse = mean_squared_error(y_train, train_preds, squared=False)
+        print("Lasso Regression Training RMSE: " + str(train_rmse))
+
+        test_preds = model.predict(X_test)
+        test_rmse = mean_squared_error(y_test,test_preds,squared=False)
+        print("Lasso Regression Testing RMSE: " + str(test_rmse))
+
+        return model
     else:
         raise NameError('Specify a correct regression algorithm')
 
-    X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=split, random_state=seed)
-
-    model.fit(X_train, y_train)
-
-    train_preds = model.score(X_train, y_train)
-    print(f"{model_name} Regression Training Accuracy: " + str(train_preds * 100) + "%")
-    preds = model.score(X_test, y_test)
-    print(f"{model_name} Regression Testing Accuracy: " + str(preds * 100) + "%")
-
-    return model
-
-# ------------------------------------------------------------------------- Apriori
-def apriori(data, min_support, min_confidence, min_lift, min_length):
-
-    rules = apriori(data, min_support, min_confidence, min_lift, min_length)
-    #data is a list of lists where the inner lists are various transactions
-    results = list(rules)
-    #results is a list of all the rules generated
-    num = 0
-    for association in results:
-      num += 1
-      transaction = [item for item in association[0]]
-      print("Association Rule #" + num + " : " + transaction[0] + " --> " + transaction[1])
-    return results
-
-# ------------------------------------------------------------------------- Save Models
-
+# ------------------------------------------------------------------------- Mode Hel
 def save_model(model):
     with open('model.pkl', 'wb') as fid:
         pickle.dump(model, fid)
