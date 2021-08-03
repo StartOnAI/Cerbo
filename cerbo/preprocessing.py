@@ -47,6 +47,23 @@ def plot_subplots(df, cols, num=5):
 
 
 def correlations(df, cols):
+    """
+    Helper method for data visualization
+
+    Parameters
+    ----------
+    df : pandas DataFrame
+        Training data with column names
+    cols : list
+        List of column names
+
+    Returns
+    -------
+    imgs : matplotlib Axes
+        Image containing correlation diagram
+    Figure is also saved locally as "correlation.png"
+
+    """
     plt.figure(figsize=(16, 12))
     imgs = sns.heatmap(df[cols].corr(), cmap="YlGnBu", annot=True, fmt='.2f', vmin=0)
     plt.savefig("correlation.png")
