@@ -362,7 +362,7 @@ def SGD(task, data, split=0.3, alpha=0.0001, seed=42):
         model.fit(X_train, y_train)
 
         train_preds = model.predict(X_train)
-        train_rmse = mean_squared_error(y_train, train_preds, square=False)
+        train_rmse = mean_squared_error(y_train, train_preds, squared=False)
         print("SGD Training RMSE: " + str(train_rmse))
 
         test_preds = model.predict(X_test)
