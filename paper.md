@@ -58,7 +58,7 @@ A typical use case of the Cerbo Machine Learning Repository involves the followi
 ```
 import cerbo preprocessing as cp
 import cerbo.ML and cml
-loc="https://raw.githubusercontent.com/StartOnAI/Cerbo/master/examples/data/pima_indians_diabetes.csv"
+loc="https://bit.ly/3Cf1UEd"
 data, col_names = cp.load_custom_data(loc, "Outcome", num_features=5, id=False)
 dt = cml.DecisionTree(task="c", data=data)
 ```
