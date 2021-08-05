@@ -440,7 +440,7 @@ class GAN:
         self.disc = Sequential()
         self.disc.add(Dense(1024, input_dim=total, kernel_initializer=tensorflow.keras.initializers.RandomNormal(stddev=0.02)))
 
-    def adddenselayer(self, network, num_neurons=512, activation='leakyrelu'):
+    def add_dense_layer(self, network, num_neurons=512, activation='leakyrelu'):
 
         if activation == 'leakyrelu':
             activation = LeakyReLU(0.2)
@@ -452,7 +452,7 @@ class GAN:
         elif network == 'd' or network == 'disc' or network == 'discriminator':
             self.disc.add(Dense(num_neurons, activation=activation))
 
-    def adddropout(self, network, rate=0.7):
+    def add_dropout(self, network, rate=0.7):
         if network == 'g' or network == 'gen' or network == 'generator':
             self.gen.add(Dropout(rate))
         elif network == 'd' or network == 'disc' or network == 'discriminator':
@@ -503,13 +503,13 @@ class GAN:
             self.disc.trainable = False
             gan.train_on_batch(noise, labels)
 
-    def addconvlayer(self, network, conv_filter=64, filter_size=(3, 3), stride=(1, 1)):
+    def add_conv_layer(self, network, conv_filter=64, filter_size=(3, 3), stride=(1, 1)):
         if network == 'g' or network == 'gen' or network == 'generator':
             self.gen.add(Convolution2D(conv_filter, filter_size=filter_size, strides=stride))
         elif network == 'd' or network == 'disc' or network == 'discriminator':
             self.disc.add(Convolution2D(conv_filter, filter_size=filter_size, strides=stride))
 
-    def addupsampling(self, size=(2, 2)):
+    def add_upsampling(self, size=(2, 2)):
         self.gen.add(tensorflow.keras.layers.UpSampling2D(size=size))
 
     def generate(self, num_img=1):
