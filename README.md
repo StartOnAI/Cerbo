@@ -9,7 +9,11 @@
 
 Cerbo means "brain" in Esperanto. 
 
-It is a high-level API wrapping Scikit-Learn, Tensorflow, and TensorFlow-Keras that allows for efficient machine learning and deep learning modelling and data preprocessing while enjoying large layers of abstraction. Cerbo was originally developed to help teach students the fundamental elements of machine learning and deep learning without requiring prerequisite knowledge in Python. It also allows students to train machine learning and deep learning models easily as there is in-built error proofing and multiple examples in the examples and docs folder that explain each function and demonstrate applications.
+It is a high-level API wrapping Scikit-Learn, Tensorflow, and TensorFlow-Keras that allows for efficient machine learning and deep learning modelling and data preprocessing while enjoying large layers of abstraction. 
+ 
+Cerbo was originally developed to help teach students the fundamental elements of machine learning and deep learning without requiring prerequisite knowledge in Python. 
+ 
+It also allows students to train machine learning and deep learning models easily as there is in-built error proofing and multiple examples in the examples and docs folder that explain each function and demonstrate applications.
 
 </div>
 
