@@ -644,12 +644,12 @@ def convert_non_numeric_data(data):
   X = pd.DataFrame(data = data['X'])
   y = pd.DataFrame(data = data['y'])
 
-  def convert(d):
-    for i in d.columns:
-      if ((is_string_dtype(d[i]))):
+  def convert(df):
+    for i in df.columns:
+      if ((is_string_dtype(df[i]))):
         enc = LabelEncoder()
-        enc.fit(d[i])
-        d[i] = enc.transform(d[i])
+        enc.fit(df[i])
+        df[i] = enc.transform(df[i])
  
   convert(X)
   convert(y)
