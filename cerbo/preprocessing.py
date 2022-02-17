@@ -17,6 +17,9 @@ from sklearn import datasets
 from sklearn.model_selection import train_test_split
 from sklearn.preprocessing import MinMaxScaler, StandardScaler
 
+from sklearn.preprocessing import LabelEncoder
+from pandas.api.types import is_string_dtype
+
 import warnings
 
 warnings.filterwarnings("ignore")
@@ -586,7 +589,6 @@ def read_images_from_directory(IMAGE_DIR, target_size=(100, 100), class_mode='ca
 
     return train_generator, test_generator
 
-
 def data_scaling(data, task="minmax"):
     """
     Scale Data to a similar range
@@ -621,6 +623,41 @@ def data_scaling(data, task="minmax"):
         "y": y
     }
     return scaled_data
+
+
+
+def convert_non_numeric_data(data):
+  '''
+  Converting categorical data into numeric data
+  
+  Parameters
+  ----------
+  data: dict
+    Dictionary containing given features
+  
+  Returns
+  -------
+  converted_data: dict
+    Dictionary with converted numerical features
+   
+  '''
+  X = pd.DataFrame(data = data['X'])
+  y = pd.DataFrame(data = data['y'])
+
+  def convert(d):
+    for i in d.columns:
+      if ((is_string_dtype(d[i]))):
+        enc = LabelEncoder()
+        enc.fit(d[i])
+        d[i] = enc.transform(d[i])
+ 
+  convert(X)
+  convert(y)
+
+  converted_data = {
+      'X': X, 'y': y
+  }
+  return converted_data
 
 def join_arrays(a, b):
     """
