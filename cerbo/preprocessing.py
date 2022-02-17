@@ -624,8 +624,6 @@ def data_scaling(data, task="minmax"):
     }
     return scaled_data
 
-
-
 def convert_non_numeric_data(data):
   '''
   Converting categorical data into numeric data
