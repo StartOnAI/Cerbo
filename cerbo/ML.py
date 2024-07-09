@@ -1,9 +1,12 @@
 import pickle
+from fbprophet import Prophet
+import pandas as pd
+import numpy as np
 
 from xgboost import XGBRegressor, XGBClassifier
 
 from sklearn.model_selection import train_test_split
-from sklearn.metrics import mean_squared_error, accuracy_score
+from sklearn.metrics import mean_squared_error, mean_absolute_error, accuracy_score
 from sklearn.tree import DecisionTreeClassifier, DecisionTreeRegressor
 from sklearn.neighbors import KNeighborsClassifier, KNeighborsRegressor
 from sklearn.ensemble import GradientBoostingClassifier, GradientBoostingRegressor, AdaBoostClassifier, AdaBoostRegressor, RandomForestClassifier, RandomForestRegressor
@@ -553,6 +556,80 @@ def Regression(data, split=0.3, task="linear", seed=42):
         return model
     else:
         raise NameError('Specify a correct regression algorithm')
+# ------------------------------------------------------------------------ Time Series Forecasting
+
+def TimeSeriesForecasting(data, split=0.8, periods=30, interval_width=0.95, yearly_seasonality='auto', weekly_seasonality='auto', daily_seasonality='auto', seed=42):
+    """
+    Time Series Forecasting using Facebook Prophet
+
+    Parameters
+    ----------
+    data : dict
+        Dictionary containing 'ds' (datestamp) and 'y' (target variable) columns
+    split : float
+        Train/Test Split for the data inside dict
+    periods : int
+        Number of periods to forecast into the future
+    interval_width : float
+        Width of the uncertainty intervals
+    yearly_seasonality : str or bool or int
+        Fit yearly seasonality
+    weekly_seasonality : str or bool or int
+        Fit weekly seasonality
+    daily_seasonality : str or bool or int
+        Fit daily seasonality
+    seed : int
+        Value that controls shuffling of data
+
+    Returns
+    -------
+    model : Prophet
+        The fitted Prophet model
+    forecast : DataFrame
+        Forecast for the next 'periods' timestamps
+    mae : float
+        Mean Absolute Error of the model on the test set
+    rmse : float
+        Root Mean Squared Error of the model on the test set
+    """
+    
+    # Convert data to DataFrame if it's not already
+    if isinstance(data, dict):
+        df = pd.DataFrame(data)
+    else:
+        df = data
+
+    # Ensure the DataFrame has 'ds' and 'y' columns
+    if 'ds' not in df.columns or 'y' not in df.columns:
+        raise ValueError("Data must contain 'ds' (datestamp) and 'y' (target variable) columns")
+
+    # Split the data
+    train_size = int(len(df) * split)
+    train_data = df[:train_size]
+    test_data = df[train_size:]
+
+    # Create and fit the model
+    model = Prophet(interval_width=interval_width,
+                    yearly_seasonality=yearly_seasonality,
+                    weekly_seasonality=weekly_seasonality,
+                    daily_seasonality=daily_seasonality)
+    model.fit(train_data)
+
+    # Make predictions on the test set
+    test_forecast = model.predict(test_data[['ds']])
+
+    # Calculate error metrics
+    mae = mean_absolute_error(test_data['y'], test_forecast['yhat'])
+    rmse = np.sqrt(mean_squared_error(test_data['y'], test_forecast['yhat']))
+
+    print(f"Mean Absolute Error: {mae}")
+    print(f"Root Mean Squared Error: {rmse}")
+
+    # Make future predictions
+    future = model.make_future_dataframe(periods=periods)
+    forecast = model.predict(future)
+
+    return model, forecast, mae, rmse
 
 # ------------------------------------------------------------------------- Mode Hel
 def save_model(model):
